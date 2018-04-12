@@ -1,0 +1,30 @@
+{
+  "upload": {
+    "ip": "127.0.0.1",
+    "port":8080
+  },
+  "download": {
+    "ip": "",
+    "port":0
+  },
+  "deleteFile": {
+    "ip": "",
+    "port":0
+  },
+  "listFiles": {
+    "ip": "",
+    "port":0
+  },
+  "logIn": {
+    "ip": "127.0.0.1",
+    "port":8080
+  },
+  "signUp": {
+    "ip": "",
+    "port":0
+  },
+  "apiGateway": {
+    "ip": "10.42.0.1",
+    "port": 8080
+  }
+}
