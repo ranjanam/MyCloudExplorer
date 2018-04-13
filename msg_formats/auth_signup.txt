@@ -1,0 +1,3 @@
+[x] Sent '{"requestID":123456,"service_name":"signup","params":{"email_id":"ranjana.ranjana@gmail.com","password":"ranjana","username":"ranjana"}}'
+
+[x] Received '{"requestID":123456,"message":"success","userID":"5ad0c51db6be677503b99da6","errorcode":0,"token":"1523631689"}'
