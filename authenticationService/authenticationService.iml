@@ -48,24 +48,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/libs/mongodb-driver-3.7.0-rc0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/libs/mongo-java-driver-3.7.0-rc0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/src/libs/json-simple-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -76,6 +58,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/src/libs/json-simple-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/libs/mongo-java-driver-2.12.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -1,3 +1,26 @@
-[x] Sent '{"requestID":123456,"service_name":"signup","params":{"email_id":"ranjana.ranjana@gmail.com","password":"ranjana","username":"ranjana"}}'
 
-[x] Received '{"requestID":123456,"message":"success","userID":"5ad0c51db6be677503b99da6","errorcode":0,"token":"1523631689"}'
+ [*] Waiting for messages. To exit press CTRL+C
+
+ [x] Received : '{"service_name":"signup","params":{"email_id":"ranjana.ranjana@gmail.com","password":"ranjana","username":"ranjana"},"request_id":123456}'
+Connected to the database successfully
+token generated: 1523706110
+[INFO] user created successfully with userID: 5ad1e8fea7b80141400f0aa9
+ [x] Sent : '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706410"},"message":"success","request_id":123456,"status":"200"}'
+ 
+ [x] Received : '{"service_name":"validate","params":{"user_id":"5ad1e8fea7b80141400f0aa9","token":"1523706410"},"request_id":123456}'
+Connected to the database successfully
+current token value: 1523706136
+ [x] Sent : '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706410"},"message":"success","request_id":123456,"status":"200"}'
+
+
+ [x] Received : '{"service_name":"signin","params":{"password":"ranjana","username":"ranjana"},"request_id":123456}'
+Connected to the database successfully
+token generated: 1523706305
+ [x] Sent : '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706605"},"message":"success","request_id":123456,"status":"200"}'
+
+
+===========================================================================================================================================================
+
+ [x] Received '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706410"},"message":"success","request_id":123456,"status":"200"}'
+ [x] Received '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706410"},"message":"success","request_id":123456,"status":"200"}'
+ [x] Received '{"data":{"userID":"5ad1e8fea7b80141400f0aa9","token":"1523706605"},"message":"success","request_id":123456,"status":"200"}'

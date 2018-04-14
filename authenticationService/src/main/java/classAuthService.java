@@ -5,6 +5,7 @@ package main.java;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -117,18 +118,21 @@ public class classAuthService {
         System.out.println(" [x] " + message);
         int retVal=0;
         JSONObject jsonResp = new JSONObject();
+        JSONObject data = new JSONObject();
 
         try {
 //            JSONObject jsonResp = new JSONObject();
 
             Object obj=JSONValue.parse(message);
             JSONObject jsonReq = (JSONObject) obj;
-            Long requestID = (long) jsonReq.get("requestID");
+            Long requestID = (long) jsonReq.get("request_id");
             String service_name =  (String) jsonReq.get("service_name");
             JSONObject params = (JSONObject)jsonReq.get("params");
 
-            jsonResp.put("requestID", new Long(requestID));
+            jsonResp.put("request_id", new Long(requestID));
             setUsername((String)params.get("username"));
+            String RespMessage ="";
+
 //        String password=(String)params.get("password");
 
             if (service_name.equals("signup"))
@@ -136,27 +140,63 @@ public class classAuthService {
                 setPassword((String)params.get("password"));
                 setEmailID((String)params.get("email_id"));
                 newUserRegistration();
-                jsonResp.put("userID",getUserID());
-                jsonResp.put("token",getToken());
-                jsonResp.put("message","success");
-
+                if(getErrorCode()==200)
+                {
+                    data.put("userID",getUserID());
+                    data.put("token",getToken());
+                    RespMessage = "success";
+//                    jsonResp.put("message","success");
+                }
+                else
+                {
+                    RespMessage = "fail";
+//                    jsonResp.put("message","fail");
+                }
             }
             else if (service_name.equals("signin"))
             {
                 setPassword((String)params.get("password"));
-//                retVal=signInUser(params);            // generate token
+                signInUser();            // generate token
+                if(getErrorCode()==200)
+                {
+                    data.put("userID",getUserID());
+                    data.put("token",getToken());
+                    RespMessage = "success";
+//                    jsonResp.put("message","success");
+                }
+                else
+                {
+                    RespMessage = "fail";
+//                    jsonResp.put("message","fail");
+                }
             }
             else if (service_name.equals("validate"))
             {
                 setToken((String) params.get("token"));
-//                retVal=validateToken(params);
+                setUserID((String) params.get("user_id"));
+                validateToken();
+                if(getErrorCode()==200)
+                {
+                    data.put("userID",getUserID());
+                    data.put("token",getToken());
+                    RespMessage = "success";
+//                    jsonResp.put("message","success");
+                }
+                else
+                {
+                    RespMessage = "fail";
+//                    jsonResp.put("message","fail");
+                }
             }
             else
             {
                 System.out.println("wrong service name in the request");
+                RespMessage = "wrong service name";
                 setErrorCode(100);
             }
-            jsonResp.put("errorcode",getErrorCode());
+            jsonResp.put("status",String.valueOf(getErrorCode()));
+            jsonResp.put("message",RespMessage);
+            jsonResp.put("data",data);
 
 
             sendResponse(jsonResp);
@@ -167,7 +207,7 @@ public class classAuthService {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
             System.out.println("[ERROR] error in processing");
-            jsonResp.put("errorcode",999);
+            jsonResp.put("status","999");
             jsonResp.put("message","fail, server side error");
 
             sendResponse(jsonResp);
@@ -187,6 +227,96 @@ public class classAuthService {
             System.out.println("[ERROR] error in sendResponse");
         }
     }
+    public void validateToken() throws Exception{
+        int retVal=0;
+//        String username=(String)params.get("username");
+//        String password=(String)params.get("password");
+        try{
+            DBoperations DBobj= new DBoperations();
+            DBobj.setUserID(getUserID());
+            DBobj.setToken(getToken());
+            DBobj.validateToken();
+//            DBobj.getErrorCode();
+            if(DBobj.getErrorCode() == 200)
+            {
+                setUserID(DBobj.getUserID());
+                setToken(DBobj.getToken());
+            }
+            else if (DBobj.ErrorCode == 100)
+            {
+                System.out.println("[ERROR] invalid token . Operation failed.");
+                retVal = 100;
+
+            }
+            else if (DBobj.ErrorCode == 101)
+            {
+                System.out.println("[ERROR] User does not exist. Operation failed.");
+                retVal = 101;
+
+            }
+            else if (DBobj.ErrorCode == 111)
+            {
+                System.out.println("[ERROR] Operation failed because of backend error");
+                retVal=111;
+            }
+            setErrorCode(DBobj.getErrorCode());
+
+        }catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+            System.out.println("[ERROR] error in login");
+            retVal =999;
+            setErrorCode(retVal);
+            throw new Exception("login failed");
+
+        }
+    }
+    public void signInUser() throws Exception{
+        int retVal=0;
+//        String username=(String)params.get("username");
+//        String password=(String)params.get("password");
+        try{
+            DBoperations DBobj= new DBoperations();
+            DBobj.setUsername(getUsername());
+            DBobj.setPassword(getPassword());
+            DBobj.signIn();
+//            DBobj.getErrorCode();
+            if(DBobj.getErrorCode() == 200)
+            {
+                setUserID(DBobj.getUserID());
+                setToken(DBobj.getToken());
+            }
+            else if (DBobj.ErrorCode == 100)
+            {
+                System.out.println("[ERROR] password is not same. Operation failed.");
+                retVal = 100;
+
+            }
+            else if (DBobj.ErrorCode == 101)
+            {
+                System.out.println("[ERROR] User does not exist. Operation failed.");
+                retVal = 101;
+
+            }
+            else if (DBobj.ErrorCode == 111)
+            {
+                System.out.println("[ERROR] Operation failed because of backend error");
+                retVal=111;
+            }
+            setErrorCode(DBobj.getErrorCode());
+
+        }catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+            System.out.println("[ERROR] error in login");
+            retVal =999;
+            setErrorCode(retVal);
+            throw new Exception("login failed");
+
+        }
+    }
     public void newUserRegistration() throws Exception
     {
         int retVal=0;
@@ -199,7 +329,7 @@ public class classAuthService {
             DBobj.setEmailID(getEmailID());
             DBobj.createUser();
 //            DBobj.getErrorCode();
-            if(DBobj.getErrorCode() == 0)
+            if(DBobj.getErrorCode() == 200)
             {
                 setUserID(DBobj.getUserID());
                 setToken(DBobj.getToken());
@@ -215,6 +345,7 @@ public class classAuthService {
                 System.out.println("[ERROR] Operation failed because of backend error");
                 retVal=111;
             }
+            setErrorCode(DBobj.getErrorCode());
 
         }catch (Exception ex)
         {
