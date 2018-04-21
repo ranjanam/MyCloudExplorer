@@ -54,7 +54,7 @@ public class Dropbox extends CloudUser {
                 appSecret = scan.next();
                 appSecret = "mz1mj7symlhkugd";
 //                System.out.println(appSecret);
-                accessToken = getAccessToken(appKey, appSecret);
+                accessToken = getAccessTokenTemp(appKey, appSecret);
                 isAppConfigured = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -69,16 +69,19 @@ public class Dropbox extends CloudUser {
         this.appKey = appKey;
         this.accessToken = accessToken;
     }
-
+    private String getAccessTokenTemp(String appKey, String appSecret) throws Exception {
+        return "MG4b5Nnr6zEAAAAAAAAEtFkXnhcc-nOfri3KCigk5xtUcQQhW1kpw5xmK2-I2aX4"; //temp -- change*********
+    }
     private String getAccessToken(String appKey, String appSecret) throws Exception {
         Scanner scan = new Scanner(System.in);
         try {
+
             JSONObject params = new JSONObject();
             params.put("appKey", appKey);
             params.put("appSecret", appSecret);
             params.put("option", "1");
             JSONObject response = conn.performOperation(params, "Dropbox", "logIn");
-            System.out.println(response.toString());
+//            System.out.println(response.toString());
             if (response.getInt("status") != 200) {
                 return response.getString("message");
             }
@@ -90,7 +93,8 @@ public class Dropbox extends CloudUser {
             params.put("code", code);
             params.put("option", "2");
             response = conn.performOperation(params, "Dropbox", "logIn");
-            return response.getString("accessToken");
+            JSONObject data = response.getJSONObject("data");
+//            return data.getString("accessToken");
         } catch (Exception e) {
             throw e;
         }

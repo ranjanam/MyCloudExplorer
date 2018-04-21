@@ -42,33 +42,18 @@ public class Connection {
         }
 
     }
-//    private JSONObject sendAndReceive(JSONObject uploadConfig, JSONObject uploadData) throws Exception  {
-//        HttpURLConnection connection = null;
-//
-//        try {
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        } finally {
-//            if (connection != null) {
-//                connection.disconnect();
-//            }
-//        }
-//    }
     private JSONObject sendAndReceive(JSONObject sysConfig, JSONObject uploadData) throws Exception  {
         try {
-//            System.out.println(sysConfig.toString());
-//            JSONObject gatewayObject = sysConfig.getJSONObject("apiGateway");
+
             Socket sock = new Socket(sysConfig.getString("ip"), sysConfig.getInt("port"));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
             BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             String send = uploadData.toString()+"\n";
             writer.write(send);
-//            writer.flush();
+            writer.flush();
             String finalResult = reader.readLine();
-            System.out.println(finalResult);
             JSONObject json = new JSONObject(finalResult);
+//            System.out.println(finalResult);
             return json;
         } catch (Exception e) {
             throw e;
@@ -78,7 +63,6 @@ public class Connection {
         try {
             JSONObject sendConfig = config.getJSONObject("apiGateway");
             JSONObject sendData = prepareJSON(data, cloudName, service);
-            System.out.println(sendData.toString());
             return sendAndReceive(sendConfig, sendData);
         } catch (Exception e) {
             throw e;
