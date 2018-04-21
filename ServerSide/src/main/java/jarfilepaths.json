@@ -1,0 +1,66 @@
+[
+  { "service_name" : "upload",
+    "jar_files" : [
+                    {
+                     "cloud_name" : "GCloud",
+                      "file_path" : "/home/bhavana/ServerSide/src/uploadGCloud.jar"
+                    },
+                    {
+                      "cloud_name" : "Dropbox",
+                      "file_path" : "/home/bhavana/ServerSide/src/uploadDropbox.jar"
+                    },
+                    {
+                      "cloud_name" : "Amazon",
+                      "file_path" : "/home/bhavana/ServerSide/src/uploadAWS.jar"
+                    }
+                  ]
+  },
+  { "service_name" : "download",
+    "jar_files" : [
+      {
+        "cloud_name" : "GCloud",
+        "file_path" : "/home/bhavana/ServerSide/src/downloadGCloud.jar"
+      },
+      {
+        "cloud_name" : "Dropbox",
+        "file_path" : "/home/bhavana/ServerSide/src/downloadDropbox.jar"
+      },
+      {
+        "cloud_name" : "Amazon",
+        "file_path" : "/home/bhavana/ServerSide/src/downloadAWS.jar"
+      }
+    ]
+  },
+  { "service_name" : "list",
+    "jar_files" : [
+      {
+        "cloud_name" : "GCloud",
+        "file_path" : "/home/bhavana/ServerSide/src/listGCloud.jar"
+      },
+      {
+        "cloud_name" : "Dropbox",
+        "file_path" : "/home/bhavana/ServerSide/src/listDropbox.jar"
+      },
+      {
+        "cloud_name" : "Amazon",
+        "file_path" : "/home/bhavana/ServerSide/src/listAWS.jar"
+      }
+    ]
+  },
+  { "service_name" : "delete",
+    "jar_files" : [
+      {
+        "cloud_name" : "GCloud",
+        "file_path" : "/home/bhavana/ServerSide/src/deleteGCloud.jar"
+      },
+      {
+        "cloud_name" : "Dropbox",
+        "file_path" : "/home/bhavana/ServerSide/src/deleteDropbox.jar"
+      },
+      {
+        "cloud_name" : "Amazon",
+        "file_path" : "/home/bhavana/ServerSide/src/deleteAWS.jar"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  { "service_name" : "upload",
+    "queue_name": "upload_queue"
+  },
+  {"service_name" : "download",
+    "queue_name": "download_queue"
+  },
+  {"service_name" : "delete",
+    "queue_name": "delete_queue"
+  },
+  {"service_name" : "list",
+    "queue_name": "list_queue"
+  },
+  {
+    "service_name" :"login",
+    "queue_name" : "login_queue"
+  },
+  {
+    "service_name" :"signup",
+    "queue_name" : "auth_request"
+  },
+  {
+    "service_name" :"signin",
+    "queue_name" : "auth_request"
+  }
+]
