@@ -11,6 +11,7 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 
 public class classAuthService {
+    String hostIP;
     String consumerQueueName;
     Channel consumerChannel;
 
@@ -81,13 +82,16 @@ public class classAuthService {
         return this.token;
     }
 
-    classAuthService(String CQname, String PQname) throws Exception
+    classAuthService(String hostIP, String CQname, String PQname) throws Exception
     {
+        this.hostIP=hostIP;;
         setConsumerQueueName(CQname);
         setProducerQueueName(PQname);
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(hostIP);
+        factory.setUsername("test");
+        factory.setPassword("test");
         connection = factory.newConnection();
         consumerChannel = connection.createChannel();
 
@@ -125,11 +129,11 @@ public class classAuthService {
 
             Object obj=JSONValue.parse(message);
             JSONObject jsonReq = (JSONObject) obj;
-            Long requestID = (long) jsonReq.get("request_id");
+            String requestID = (String) jsonReq.get("request_id");
             String service_name =  (String) jsonReq.get("service_name");
-            JSONObject params = (JSONObject)jsonReq.get("params");
+            JSONObject params = (JSONObject)jsonReq.get("cloud_params");
 
-            jsonResp.put("request_id", new Long(requestID));
+            jsonResp.put("request_id", new String(requestID));
             setUsername((String)params.get("username"));
             String RespMessage ="";
 

@@ -63,6 +63,7 @@ public class Connection {
         try {
             JSONObject sendConfig = config.getJSONObject("apiGateway");
             JSONObject sendData = prepareJSON(data, cloudName, service);
+            System.out.println("sendData : "+sendData.toString());
             return sendAndReceive(sendConfig, sendData);
         } catch (Exception e) {
             throw e;

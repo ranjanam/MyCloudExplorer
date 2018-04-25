@@ -98,7 +98,7 @@ public class Dropbox extends CloudUser {
         } catch (Exception e) {
             throw e;
         }
-
+        return "0";
     }
 
     private String getPath(List<String> locations, String fileName) {

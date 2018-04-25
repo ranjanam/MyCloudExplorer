@@ -172,12 +172,12 @@ public class ServerService {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare(message_queue, false, false, false, null);
+        channel.queueDeclare(message_queue, true, false, false, null);
 
         JSONObject send_params=new JSONObject();
         String requested_service_name=(String) requested_service_params.getString("service_name");
         String request_id=(String) requested_service_params.getString("request_id");
-        map.put("request_id",requested_service_name);
+        map.put(request_id,requested_service_name);
         if(requested_service_name.equals("signup"))
         {
             channel.basicPublish("", message_queue, null, requested_service_params.toString().getBytes());

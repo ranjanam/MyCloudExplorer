@@ -56,8 +56,12 @@ public class Startup {
                     }
                     try {
                         userObj.userLogin(params, conn);
-                        System.out.println("Success");
-                        isUserLoggedIn = true;
+
+                        if (!userObj.getUserID().isEmpty())
+                        {
+                            System.out.println("Success");
+                            isUserLoggedIn = true;
+                        }
 
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -90,8 +94,12 @@ public class Startup {
                     }
                     try {
                         userObj.userSignUp(params,conn);
-                        System.out.println("Success");
-                        isUserLoggedIn = true;
+                        if (!userObj.getUserID().isEmpty())
+                        {
+                            System.out.println("Success");
+                            isUserLoggedIn = true;
+                        }
+
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -123,8 +131,8 @@ public class Startup {
         }
         System.out.println("My Cloud Explorer");
         System.out.println("-----------------------------");
-//        boolean isUserLoggedIn = appLogin(scan, userObj, conn);
-        boolean isUserLoggedIn = true; //**********change******
+        boolean isUserLoggedIn = appLogin(scan, userObj, conn);
+//        boolean isUserLoggedIn = true; //**********change******
         if (!isUserLoggedIn) {
             System.out.println("Bye...");
             return;

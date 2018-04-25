@@ -6,11 +6,15 @@ import java.io.IOException;
 
 public class Recv {
 
-    private final static String QUEUE_NAME = "Auth_Resp_Queue";
+    private final static String QUEUE_NAME = "auth_request";
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+//        factory.setHost("localhost");
+        factory.setHost("10.1.99.83");
+        factory.setUsername("test");
+        factory.setPassword("test");
+
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 

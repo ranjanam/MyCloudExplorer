@@ -32,10 +32,11 @@ public class RequestHandler implements Runnable {
             Long timeStampMillis = instant.toEpochMilli();
             String currentTime = timeStampMillis.toString();
             JSONObject params = req.getJSONObject("cloud_params");
-            params.put("request_id", currentTime);
+            req.put("request_id", currentTime);
             mapping.put(currentTime, socket);
             String message = req.toString();
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+
             System.out.println(" [x] Sent '" + message + "'");
         } catch (Exception e) {
             e.printStackTrace();
