@@ -53,7 +53,7 @@ public class Connection {
             writer.flush();
             String finalResult = reader.readLine();
             JSONObject json = new JSONObject(finalResult);
-//            System.out.println(finalResult);
+            System.out.println(finalResult);
             return json;
         } catch (Exception e) {
             throw e;

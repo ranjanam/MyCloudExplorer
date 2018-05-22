@@ -10,11 +10,21 @@ public class User {
     public String userId;
     public String token;
     public CloudUser cloudUser;
+    JSONObject cloud_info;
 
 
     public User(){
         setToken("");
         setUserID("");
+        cloud_info = new JSONObject();
+    }
+
+    public void setCloud_info(String key, String value) throws Exception{
+        cloud_info.put(key, value);
+    }
+
+    public String getCloud_info(String key) throws Exception{
+        return ((String) cloud_info.get(key));
     }
 
     public void setUserID(String userID){
@@ -38,7 +48,7 @@ public class User {
         //if
         try {
 
-            JSONObject json = conn.performOperation(params,"", "login");
+            JSONObject json = conn.performOperation(params,"", "signin");
             String status = (String) json.get("status");
             if (status.equals("200")){
                 JSONObject data = (JSONObject) json.get("data");
@@ -58,6 +68,11 @@ public class User {
                 JSONObject data = (JSONObject) json.get("data");
                 setToken((String) data.get("token"));
                 setUserID((String) data.get("userID"));
+                JSONObject cloud_info = (JSONObject) data.get("cloud_info");
+                setCloud_info("aws",(String) cloud_info.get("aws"));
+                setCloud_info("dropbox",(String) cloud_info.get("dropbox"));
+                setCloud_info("gcloud",(String) cloud_info.get("gcloud"));
+
             }
         } catch (Exception e) {
             throw e;

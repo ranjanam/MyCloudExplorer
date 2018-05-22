@@ -24,6 +24,15 @@ public class classAuthService {
     String username, password,userID,token,emailID;
     int ErrorCode;
 
+    JSONObject cloud_info;
+    public void setCloud_info(String key, String value) throws Exception{
+        cloud_info.put(key, value);
+    }
+
+    public String getCloud_info(String key) throws Exception{
+        return ((String) cloud_info.get(key));
+    }
+
 
     public void setProducerQueueName(String producerQueueName){
         this.producerQueueName = producerQueueName;
@@ -84,7 +93,8 @@ public class classAuthService {
 
     classAuthService(String hostIP, String CQname, String PQname) throws Exception
     {
-        this.hostIP=hostIP;;
+        cloud_info = new JSONObject();
+        this.hostIP=hostIP;
         setConsumerQueueName(CQname);
         setProducerQueueName(PQname);
 
@@ -142,12 +152,13 @@ public class classAuthService {
             if (service_name.equals("signup"))
             {
                 setPassword((String)params.get("password"));
-                setEmailID((String)params.get("email_id"));
+                setEmailID((String)params.get("email"));
                 newUserRegistration();
                 if(getErrorCode()==200)
                 {
                     data.put("userID",getUserID());
                     data.put("token",getToken());
+                    data.put("cloud_info",cloud_info);
                     RespMessage = "success";
 //                    jsonResp.put("message","success");
                 }
@@ -337,6 +348,9 @@ public class classAuthService {
             {
                 setUserID(DBobj.getUserID());
                 setToken(DBobj.getToken());
+                setCloud_info("aws",DBobj.getCloud_info("aws"));
+                setCloud_info("dropbox",DBobj.getCloud_info("aws"));
+                setCloud_info("gcloud",DBobj.getCloud_info("aws"));
             }
             else if (DBobj.ErrorCode == 100)
             {

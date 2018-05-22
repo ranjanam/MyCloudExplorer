@@ -27,10 +27,12 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
+import org.json.JSONObject;
 
 
 public class DBoperations {
     String username, password,userID,token,emailID;
+    JSONObject cloud_info;
     int ErrorCode;
     long timeout= 300 ; // 5mins
     MongoClient mongo;
@@ -39,6 +41,7 @@ public class DBoperations {
 
     DBoperations() throws Exception{
         mongo = new MongoClient("localhost");
+        cloud_info = new JSONObject();
 
         // Creating Credentials
         System.out.println("Connected to the database successfully");
@@ -49,6 +52,15 @@ public class DBoperations {
 
 
     }
+
+    public void setCloud_info(String key, String value) throws Exception{
+        cloud_info.put(key, value);
+    }
+
+    public String getCloud_info(String key) throws Exception{
+        return ((String) cloud_info.get(key));
+    }
+
     public void setErrorCode(int errorCode){
         this.ErrorCode = errorCode;
     }
@@ -157,6 +169,7 @@ public class DBoperations {
             }
         }
         else{
+
             setErrorCode(100);
         }
     }
@@ -174,26 +187,47 @@ public class DBoperations {
         System.out.println("token generated: "+ tokenval);
 
         setToken(Long.toString(tokenval+timeout));
+        try
+        {
+            this.setCloud_info("aws", "false");
+            this.setCloud_info("dropbox", "false");
+            this.setCloud_info("gcloud", "false");
 
-        BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
+            BasicDBObject cloud_info = new BasicDBObject();
+            cloud_info.put("aws", this.getCloud_info("aws"));
+            cloud_info.put("dropbox", this.getCloud_info("dropbox"));
+            cloud_info.put("gcloud", this.getCloud_info("gcloud"));
 
-        docBuilder.append("username", this.getUsername());
-        docBuilder.append("password", this.getPassword());
-        docBuilder.append("email_id", this.getEmailID());
-        docBuilder.append("token", this.getToken());
-        DBObject doc =docBuilder.get();
+            BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
 
-        WriteResult result = users.insert(doc);
-        BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.put("username", this.getUsername());
-        BasicDBObject fields = new BasicDBObject();
-        fields.put("_id", 1);
+            docBuilder.append("username", this.getUsername());
+            docBuilder.append("password", this.getPassword());
+            docBuilder.append("email_id", this.getEmailID());
+            docBuilder.append("cloud_info", cloud_info);
+            docBuilder.append("token", this.getToken());
+            DBObject doc =docBuilder.get();
 
-        DBObject newUser = users.findOne(whereQuery,fields);
+            WriteResult result = users.insert(doc);
+            BasicDBObject whereQuery = new BasicDBObject();
+            whereQuery.put("username", this.getUsername());
+            BasicDBObject fields = new BasicDBObject();
+            fields.put("_id", 1);
 
-        System.out.println("[INFO] user created successfully with userID: "+ newUser.get("_id"));
-        setUserID(newUser.get("_id").toString());
+            DBObject newUser = users.findOne(whereQuery,fields);
 
-        setErrorCode(200);
+            System.out.println("[INFO] user created successfully with userID: "+ newUser.get("_id"));
+            setUserID(newUser.get("_id").toString());
+
+            setErrorCode(200);
+//            System.out.println("finished");
+        }
+
+        catch (Exception ex){
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+            setErrorCode(111);
+        }
+
     }
+
 }

@@ -33,8 +33,10 @@ public class Startup {
             System.out.print("Enter option : ");
             int userOption = scan.nextInt();
             scan.nextLine();
-            if (userOption==3)
+            if (userOption==3) {
+                isUserLoggedIn = false;
                 break;
+            }
             while(true) {
                 if (userOption==1) {
                     String keys[] = {"username", "password"};
@@ -129,126 +131,171 @@ public class Startup {
             System.out.println("Cannot read Config file "+e.getMessage());
             return;
         }
-        System.out.println("My Cloud Explorer");
-        System.out.println("-----------------------------");
-        boolean isUserLoggedIn = appLogin(scan, userObj, conn);
+        while (true)
+        {
+
+            System.out.println("My Cloud Explorer");
+            System.out.println("-----------------------------");
+            boolean isUserLoggedIn = appLogin(scan, userObj, conn);
 //        boolean isUserLoggedIn = true; //**********change******
-        if (!isUserLoggedIn) {
-            System.out.println("Bye...");
-            return;
-        }
-
-        while(true) {
-            System.out.println("1.Amazon 2.Dropbox 3.Google Cloud");
-            System.out.print("Enter option : ");
-            int option = scan.nextInt();
-            scan.nextLine();
-            boolean isAppConfigured=false;
-            switch (option) {
-                case 1:
-                    break;
-                case 2:
-                    int currentOpt;
-                    try {
-                        userObj.cloudUser = new Dropbox(userObj.userId, scan, conn);
-                        isAppConfigured = true;
-                    } catch (Exception e) {
-                        isAppConfigured = false;
-                        System.out.println(e.getMessage());
-                    }
-
-                    if (!isAppConfigured)
-                        continue;
-                    CloudUser currentCloud = userObj.cloudUser;
-
-                    List<String> locations = new ArrayList<>();
-                    boolean isExitCloud = false;
-                    while(true) {
-                        System.out.println("1.List Current Directory 2.Goto Directory 3.Upload 4.Download 5.Delete 6.Go Back");
-                        System.out.print("Enter option : ");
-                        currentOpt=scan.nextInt();
-                        scan.nextLine();
-                        switch (currentOpt) {
-                            case 1:
-                                if (!listFilesDropbox(currentCloud, locations)) { //check
-                                    locations.remove(locations.size() - 1);
-                                }
-
-                                break;
-                            case 2: System.out.println("Enter Directory name : ");
-                                String currDir = scan.nextLine();
-                                locations.add(currDir);
-                                if (!listFilesDropbox(currentCloud, locations)) {
-                                    locations.remove(locations.size() - 1);
-                                }
-                            case 3:
-                                System.out.print("Enter local file location : ");
-                                String inputFileName = scan.nextLine();
-                                System.out.print("Enter output file name : ");
-                                String outputFileName = scan.nextLine();
-                                try {
-                                    JSONObject obj = new JSONObject();
-                                    obj.put("location", locations);
-                                    obj.put("outputFileName", outputFileName);
-                                    obj.put("inputFileName", inputFileName);
-                                    System.out.println(currentCloud.uploadFile(obj));
-                                } catch (Exception e) {
-                                    System.out.println("Upload failed");
-
-                                }
-                                break;
-                            case 4:
-                                System.out.print("Enter directory/file name : ");
-                                String name = scan.nextLine();
-                                System.out.print("Enter destination location : ");
-                                outputFileName = scan.nextLine();
-                                try {
-                                    JSONObject obj = new JSONObject();
-                                    obj.put("location", locations);
-                                    obj.put("outputFileName", outputFileName);
-                                    obj.put("inputFileName", name);
-                                    System.out.println(currentCloud.downloadFile(obj));
-                                } catch (Exception e) {
-                                    System.out.println(e.getMessage());
-                                }
-
-                                break;
-                            case 5:
-                                System.out.print("Enter directory/file name : ");
-                                name = scan.nextLine();
-                                try {
-                                    JSONObject obj = new JSONObject();
-                                    obj.put("location", locations);
-                                    obj.put("fileName", name);
-                                    System.out.println(currentCloud.deleteFile(obj));
-                                } catch(Exception e) {
-                                    System.out.println(e.getMessage());
-                                }
-
-                                break;
-                            case 6:System.out.println("Going back");
-                                if (locations.size()>0) {
-                                    locations.remove(locations.size() - 1);
-                                } else {
-                                    isExitCloud = true;
-                                }
-                                break;
-                            default:System.out.println("Invalid Option");
-                                break;
-                        }
-                        if (isExitCloud)
-                            break;
-                    }
-
-                    break;
-                case 3:
-                    break;
-                default:System.out.println("Enter valid option");
-                    break;
+            if (!isUserLoggedIn) {
+                System.out.println("Bye...");
+                return;
             }
 
+            while(true) {
+                System.out.println("1.Amazon 2.Dropbox 3.Google Cloud 4.Exit");
+                System.out.print("Enter option : ");
+                int option = scan.nextInt();
+                scan.nextLine();
+                boolean isAppConfigured=false;
+                boolean back = false;
+                switch (option) {
+                    case 1:         //aws
+                        int curOpt;
+                        try
+                        {
+                            if (userObj.getCloud_info("aws").equals("true")) {  //TODO: change true to false
+                                // add cloud details
+                            }
+                            else{
+                                System.out.println("1.List all files \n" +
+                                        "2.Upload a file \n" +
+                                        "3.Download a file \n" +
+                                        "4.Delete \n" +
+                                        "5.list all buckets \n" +
+                                        "6.add bucket \n" +
+                                        "5.Go Back");
+                                System.out.print("Enter option : ");
+                                curOpt=scan.nextInt();
+                                scan.nextLine();
+                                switch (curOpt) {
+                                    case 1:    //list all files in the bucket
+                                        System.out.print("Enter bucket name : ");
+                                        String bucketName = scan.nextLine();
 
+                                        break;
 
+                                }
+                            }
+                        }catch(Exception ex)
+                        {
+                            System.out.println(ex.getMessage());
+                            ex.printStackTrace();
+
+                        }
+                        break;
+                    case 2:
+                        int currentOpt;
+                        try {
+                            userObj.cloudUser = new Dropbox(userObj.userId, scan, conn);
+                            isAppConfigured = true;
+                        } catch (Exception e) {
+                            isAppConfigured = false;
+                            System.out.println(e.getMessage());
+                        }
+
+                        if (!isAppConfigured) {
+                            continue;
+                        }
+                        CloudUser currentCloud = userObj.cloudUser;
+
+                        List<String> locations = new ArrayList<>();
+                        boolean isExitCloud = false;
+
+                        while(true) {
+
+                            System.out.println("1.List Current Directory 2.Goto Directory 3.Upload 4.Download 5.Delete 6.Go Back");
+                            System.out.print("Enter option : ");
+                            currentOpt=scan.nextInt();
+                            scan.nextLine();
+                            switch (currentOpt) {
+                                case 1:
+                                    if (!listFilesDropbox(currentCloud, locations)) { //check
+                                        locations.remove(locations.size() - 1);
+                                    }
+
+                                    break;
+                                case 2: System.out.println("Enter Directory name : ");
+                                    String currDir = scan.nextLine();
+                                    locations.add(currDir);
+                                    if (!listFilesDropbox(currentCloud, locations)) {
+                                        locations.remove(locations.size() - 1);
+                                    }
+                                case 3:
+                                    System.out.print("Enter local file location : ");
+                                    String inputFileName = scan.nextLine();
+                                    System.out.print("Enter output file name : ");
+                                    String outputFileName = scan.nextLine();
+                                    try {
+                                        JSONObject obj = new JSONObject();
+                                        obj.put("location", locations);
+                                        obj.put("outputFileName", outputFileName);
+                                        obj.put("inputFileName", inputFileName);
+                                        System.out.println(currentCloud.uploadFile(obj));
+                                    } catch (Exception e) {
+                                        System.out.println("Upload failed");
+
+                                    }
+                                    break;
+                                case 4:
+                                    System.out.print("Enter directory/file name : ");
+                                    String name = scan.nextLine();
+                                    System.out.print("Enter destination location : ");
+                                    outputFileName = scan.nextLine();
+                                    try {
+                                        JSONObject obj = new JSONObject();
+                                        obj.put("location", locations);
+                                        obj.put("outputFileName", outputFileName);
+                                        obj.put("inputFileName", name);
+                                        System.out.println(currentCloud.downloadFile(obj));
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
+
+                                    break;
+                                case 5:
+                                    System.out.print("Enter directory/file name : ");
+                                    name = scan.nextLine();
+                                    try {
+                                        JSONObject obj = new JSONObject();
+                                        obj.put("location", locations);
+                                        obj.put("fileName", name);
+                                        System.out.println(currentCloud.deleteFile(obj));
+                                    } catch(Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
+
+                                    break;
+                                case 6:System.out.println("Going back");
+                                    if (locations.size()>0) {
+                                        locations.remove(locations.size() - 1);
+                                    } else {
+                                        isExitCloud = true;
+                                    }
+                                    break;
+                                default:System.out.println("Invalid Option");
+                                    break;
+                            }
+                            if (isExitCloud) {
+                                break;
+                            }
+                        }
+
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        back =true;
+                        break;
+                    default:System.out.println("Enter valid option");
+                        break;
+                }
+                if(back== true) {
+                    break;
+                }
+
+            }
         }
     }
 
